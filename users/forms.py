@@ -1,22 +1,11 @@
-import re
-
 from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import PasswordChangeForm
 
-from users.models import User, validate_github_url
-
-
-PHONE_RE = re.compile(r"^(8\d{10}|\+7\d{10})$")
-
-
-def normalize_phone(phone):
-    if not phone:
-        return None
-    phone = phone.strip()
-    if phone.startswith("8"):
-        return f"+7{phone[1:]}"
-    return phone
+from team_finder.mixins import GithubUrlCleanMixin
+from users.constants import PHONE_PATTERN
+from users.models import User
+from users.services import PHONE_RE, normalize_phone
 
 
 class RegistrationForm(forms.ModelForm):
@@ -80,7 +69,7 @@ class LoginForm(forms.Form):
         return self.user_cache
 
 
-class ProfileEditForm(forms.ModelForm):
+class ProfileEditForm(GithubUrlCleanMixin, forms.ModelForm):
     class Meta:
         model = User
         fields = ["name", "surname", "avatar", "about", "phone", "github_url"]
@@ -96,7 +85,7 @@ class ProfileEditForm(forms.ModelForm):
             "name": forms.TextInput(attrs={"placeholder": "Имя"}),
             "surname": forms.TextInput(attrs={"placeholder": "Фамилия"}),
             "about": forms.Textarea(attrs={"rows": 4, "placeholder": "Расскажите о себе"}),
-            "phone": forms.TextInput(attrs={"placeholder": "+79991234567"}),
+            "phone": forms.TextInput(attrs={"placeholder": "+79991234567", "pattern": PHONE_PATTERN}),
             "github_url": forms.URLInput(attrs={"placeholder": "https://github.com/username"}),
             "avatar": forms.FileInput(attrs={"accept": "image/*", "hidden": True}),
         }
@@ -108,18 +97,10 @@ class ProfileEditForm(forms.ModelForm):
         phone = phone.strip()
         if not PHONE_RE.match(phone):
             raise forms.ValidationError("Телефон должен быть в формате 8XXXXXXXXXX или +7XXXXXXXXXX.")
-        phone = normalize_phone(phone)
-        qs = User.objects.filter(phone=phone)
-        if self.instance.pk:
-            qs = qs.exclude(pk=self.instance.pk)
-        if qs.exists():
+        normalized_phone = normalize_phone(phone)
+        if User.objects.filter(phone=normalized_phone).exclude(pk=self.instance.pk).exists():
             raise forms.ValidationError("Такой номер телефона уже используется.")
-        return phone
-
-    def clean_github_url(self):
-        github_url = self.cleaned_data.get("github_url")
-        validate_github_url(github_url)
-        return github_url
+        return normalized_phone
 
 
 class UserPasswordChangeForm(PasswordChangeForm):

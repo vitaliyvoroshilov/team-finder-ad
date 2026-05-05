@@ -13,3 +13,4 @@ DATABASES = {
 PASSWORD_HASHERS = ["django.contrib.auth.hashers.MD5PasswordHasher"]
 MEDIA_ROOT = BASE_DIR / ".test_media"
 MEDIA_ROOT.mkdir(exist_ok=True)
+ALLOWED_HOSTS = [*ALLOWED_HOSTS, "testserver"]  # noqa: F405

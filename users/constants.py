@@ -1,0 +1,36 @@
+from enum import StrEnum
+
+
+DEFAULT_SUPERUSER_NAME = "Admin"
+DEFAULT_SUPERUSER_SURNAME = "User"
+GITHUB_HOSTS = ("github.com", "www.github.com")
+
+NAME_MAX_LENGTH = 124
+SURNAME_MAX_LENGTH = 124
+SKILL_NAME_MAX_LENGTH = 124
+PHONE_MAX_LENGTH = 12
+ABOUT_MAX_LENGTH = 256
+
+PHONE_PATTERN = r"^(8\d{10}|\+7\d{10})$"
+
+AVATAR_UPLOAD_TO = "avatars/"
+AVATAR_FILENAME_PREFIX = "avatar"
+AVATAR_IMAGE_FORMAT = "PNG"
+AVATAR_SIZE = 256
+AVATAR_FONT_NAME = "arial.ttf"
+AVATAR_FONT_SIZE = 140
+AVATAR_TEXT_Y_OFFSET = -8
+AVATAR_TEXT_COLOR = "#1E293B"
+AVATAR_DEFAULT_LETTER = "?"
+
+
+class AvatarBackgroundColor(StrEnum):
+    SKY = "#D9E6F2"
+    SAGE = "#DDEBDB"
+    SAND = "#F1E2CC"
+    LAVENDER = "#E7D9F2"
+    ASH = "#E9E2DA"
+    MINT = "#DCE8E6"
+
+
+AVATAR_BACKGROUND_COLORS = tuple(color.value for color in AvatarBackgroundColor)

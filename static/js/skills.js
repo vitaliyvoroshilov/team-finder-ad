@@ -10,8 +10,8 @@
     let skillsUrl, addUrl, removeUrl;
     if (userId) {
       skillsUrl = `/users/skills/`;
-      addUrl = `/users/${userId}/skills/add/`;
-      removeUrl = (skillId) => `/users/${userId}/skills/${skillId}/remove/`;
+      addUrl = `/users/skills/add/`;
+      removeUrl = (skillId) => `/users/skills/${skillId}/remove/`;
     } else {
       skillsUrl = `/projects/skills/`;
       addUrl = `/projects/${projectId}/skills/add/`;

@@ -6,8 +6,8 @@ from users.models import Skill, User
 
 @admin.register(User)
 class UserAdmin(DjangoUserAdmin):
-    ordering = ("id",)
-    list_display = ("email", "name", "surname", "is_staff")
+    ordering = ("email",)
+    list_display = ("email", "name", "surname", "skills_list", "is_staff")
     fieldsets = (
         (None, {"fields": ("email", "password")}),
         (
@@ -28,8 +28,11 @@ class UserAdmin(DjangoUserAdmin):
     )
     search_fields = ("email", "name", "surname")
 
+    @admin.display(description="Навыки")
+    def skills_list(self, obj):
+        return ", ".join(obj.skills.values_list("name", flat=True))
+
 
 @admin.register(Skill)
 class SkillAdmin(admin.ModelAdmin):
     search_fields = ("name",)
-    ordering = ("name",)

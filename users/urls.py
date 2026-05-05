@@ -13,11 +13,7 @@ urlpatterns = [
     path("edit-profile/", views.edit_profile_view, name="edit_profile"),
     path("change-password/", views.change_password_view, name="change_password"),
     path("skills/", views.skill_autocomplete_view, name="skills"),
-    path("<int:user_id>/skills/add/", views.add_user_skill_view, name="add_skill"),
-    path(
-        "<int:user_id>/skills/<int:skill_id>/remove/",
-        views.remove_user_skill_view,
-        name="remove_skill",
-    ),
+    path("skills/add/", views.add_user_skill_view, name="add_skill"),
+    path("skills/<int:skill_id>/remove/", views.remove_user_skill_view, name="remove_skill"),
     path("<int:user_id>/", views.user_detail_view, name="detail"),
 ]

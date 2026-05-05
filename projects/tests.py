@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from django.test import Client, TestCase
 from django.urls import reverse
 
@@ -6,24 +8,27 @@ from users.models import User
 
 
 class ProjectViewsTests(TestCase):
-    def setUp(self):
-        self.client = Client()
-        self.owner = User.objects.create_user(
+    @classmethod
+    def setUpTestData(cls):
+        cls.owner = User.objects.create_user(
             email="owner@example.com",
             password="testpass123",
             name="Olga",
             surname="Sidorova",
         )
-        self.member = User.objects.create_user(
+        cls.member = User.objects.create_user(
             email="member@example.com",
             password="testpass123",
             name="Petr",
             surname="Smirnov",
         )
+        cls.owner_client = Client()
+        cls.owner_client.force_login(cls.owner)
+        cls.member_client = Client()
+        cls.member_client.force_login(cls.member)
 
     def test_create_project_adds_owner_to_participants(self):
-        self.client.force_login(self.owner)
-        response = self.client.post(
+        response = self.owner_client.post(
             reverse("projects:create"),
             {
                 "name": "Team Finder",
@@ -45,10 +50,9 @@ class ProjectViewsTests(TestCase):
             github_url="https://github.com/example/api",
         )
         project.participants.add(self.owner)
-        self.client.force_login(self.member)
 
-        response = self.client.post(reverse("projects:toggle_participate", args=[project.id]))
-        self.assertEqual(response.status_code, 200)
+        response = self.member_client.post(reverse("projects:toggle_participate", args=[project.id]))
+        self.assertEqual(response.status_code, HTTPStatus.OK)
         project.refresh_from_db()
         self.assertTrue(project.participants.filter(pk=self.member.pk).exists())
 
@@ -60,9 +64,8 @@ class ProjectViewsTests(TestCase):
             github_url="https://github.com/example/web",
         )
         project.participants.add(self.owner)
-        self.client.force_login(self.owner)
 
-        response = self.client.post(reverse("projects:complete", args=[project.id]))
-        self.assertEqual(response.status_code, 200)
+        response = self.owner_client.post(reverse("projects:complete", args=[project.id]))
+        self.assertEqual(response.status_code, HTTPStatus.OK)
         project.refresh_from_db()
         self.assertEqual(project.status, Project.STATUS_CLOSED)
