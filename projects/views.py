@@ -8,7 +8,7 @@ from django.views.decorators.http import require_POST
 from projects.forms import ProjectForm
 from projects.models import Project
 from projects.services import get_projects_queryset
-from team_finder.services import build_page_context
+from core.services import build_page_context
 
 
 def project_list_view(request):

@@ -14,7 +14,7 @@ from users.constants import (
 )
 from users.managers import UserManager
 from users.services import build_avatar_content, build_avatar_filename
-from users.validators import validate_github_url
+from core.validators import validate_github_url
 
 
 class Skill(models.Model):

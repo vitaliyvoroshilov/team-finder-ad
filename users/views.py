@@ -6,10 +6,10 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_GET, require_POST
 
-from team_finder.services import build_page_context, load_json_body
+from core.services import build_page_context, load_json_body
 from users.forms import LoginForm, ProfileEditForm, RegistrationForm, UserPasswordChangeForm
 from users.models import Skill
-from users.services import get_skills_queryset, get_user_details_queryset, get_users_queryset
+from users.querysets import get_skills_queryset, get_user_details_queryset, get_users_queryset
 
 
 def register_view(request):

@@ -9,7 +9,7 @@ from projects.constants import (
     PROJECT_STATUS_MAX_LENGTH,
     PROJECT_STATUS_OPEN,
 )
-from users.validators import validate_github_url
+from core.validators import validate_github_url
 
 
 class Project(models.Model):

@@ -1,7 +1,7 @@
 from django import forms
 
 from projects.models import Project
-from team_finder.mixins import GithubUrlCleanMixin
+from core.mixins import GithubUrlCleanMixin
 
 
 class ProjectForm(GithubUrlCleanMixin, forms.ModelForm):

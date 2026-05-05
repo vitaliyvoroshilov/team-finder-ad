@@ -54,22 +54,3 @@ def build_avatar_content(name, email):
     buffer = io.BytesIO()
     image.save(buffer, format=AVATAR_IMAGE_FORMAT)
     return buffer.getvalue()
-
-
-def get_users_queryset():
-    from users.models import User
-
-    return User.objects.prefetch_related("skills").order_by("surname", "name", "email")
-
-
-def get_user_details_queryset():
-    return get_users_queryset().prefetch_related("owned_projects__participants")
-
-
-def get_skills_queryset(query=""):
-    from users.models import Skill
-
-    skills = Skill.objects.order_by("name")
-    if query:
-        skills = skills.filter(name__istartswith=query)
-    return skills

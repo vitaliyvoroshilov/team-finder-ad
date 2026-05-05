@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import PasswordChangeForm
 
-from team_finder.mixins import GithubUrlCleanMixin
+from core.mixins import GithubUrlCleanMixin
 from users.constants import PHONE_PATTERN
 from users.models import User
 from users.services import PHONE_RE, normalize_phone
